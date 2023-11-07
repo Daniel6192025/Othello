@@ -122,6 +122,14 @@ public class PitneyNguyenNguyen extends Player
     return list;
   }
   
-  
+  public ArrayList<Position> isCorner(Board board) {
+      int color = this.getColor();
+  }
+  public ArrayList<Position> dangerRTSquares(Board board, Position position, Square dangerSquare) {
+      Position dangerRTSquare1 = new Position(0,8);
+      Position dangerRTSquare2 = new Position(1,8);
+      Position dangerRTSquare3 = new Position(1,9); 
+      
+  }
 }
 
