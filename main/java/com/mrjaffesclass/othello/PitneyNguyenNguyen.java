@@ -10,21 +10,13 @@ import java.util.*;
  */
 public class PitneyNguyenNguyen extends Player
 {
-    private final int color;
+    private final int color = this.color;
     /**
      * PitneyNguyenNguyen constructor
      * @param color   One of Constants.WHITE or Constants.BLACK
      */
     public PitneyNguyenNguyen(int color) {
         super(color);
-    }
-
-    /**
-     * Gets the player color
-     * @return        PitneyNguyenNguyen color
-     */
-    public int getColor() {
-        return this.color;
     }
 
     /**
@@ -44,12 +36,22 @@ public class PitneyNguyenNguyen extends Player
     Position getNextMove(Board board) {
         ArrayList<Position> legalMoves = this.getLegalMoves(board);
         if (legalMoves.isEmpty()) {
-            return null; 
-        } else {
-            
+            return null;    
         }
+
+        int maxEval = Integer.MIN_VALUE;
+        Position bestMove = null;
+
+        for (Position move : legalMoves) {
+            int eval = minimax(board, move, 3, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
+            if (eval > maxEval) {
+                maxEval = eval;
+                bestMove = move;
+            }
+        }
+        return bestMove;
     }
-    
+
     private boolean evaluation(Board board, Position position, int alpha, int beta){
         return true;
     }
@@ -57,7 +59,7 @@ public class PitneyNguyenNguyen extends Player
     private int minimax(Board board, Position position, int depth, int alpha, int beta, boolean maximizingPlayer) {
         if (depth == 0 || board.countSquares(Constants.EMPTY) == 0) {
             // Khoa returning a position fix in progress lol
-            return 0;
+            return assessMove(board, position);
         }
 
         if (maximizingPlayer) {
@@ -86,6 +88,83 @@ public class PitneyNguyenNguyen extends Player
             return minEval;
         }
 
+    }
+
+    private int assessMove(Board board, Position move) {
+        int flippedDiscs = countFlippedDiscs(board, move);
+        int boardControl = calculateBoardControl(board, move);
+
+        return (2 * flippedDiscs) + boardControl;
+    }
+
+    private int calculateBoardControl(Board board, Position move) {
+        int control = 0;
+
+        for (String direction : Directions.getDirections()) {
+            Position directionVector = Directions.getVector(direction);
+            Position newPosition = move.translate(directionVector);
+            if (!newPosition.isOffBoard()) {
+                if (board.getSquare(newPosition).getStatus() == Constants.EMPTY) {
+                    control++;
+                }
+            }
+        }
+
+        return control;
+    }
+
+    private int countFlippedDiscs(Board board, Position move) {
+        int color = this.getColor();
+        int flippedDiscs = 0;
+
+        // Iterate through directions
+        for (String direction : Directions.getDirections()) {
+            Position directionVector = Directions.getVector(direction);
+            Position newPosition = move.translate(directionVector);
+
+            // Check if the new position is on the board
+            if (!newPosition.isOffBoard()) {
+                // Check if there is a line of opponent discs to flip
+                if (step(board, newPosition, directionVector, 0)) {
+                    flippedDiscs++;
+                }
+            }
+        }
+
+        return flippedDiscs;
+    }
+
+    public ArrayList<Position> getOpponentPositions(Board board) {
+        int opponentColor = (this.getColor() == Constants.BLACK) ? Constants.WHITE : Constants.BLACK;
+        ArrayList<Position> list = new ArrayList<>();
+        for (int row = 0; row < Constants.SIZE; row++) {
+            for (int col = 0; col < Constants.SIZE; col++) {
+                Position testPosition = new Position(row, col);
+                if (board.getSquare(testPosition).getStatus() == opponentColor) {
+                    if (board.isLegalMove(this, testPosition)) {
+                        list.add(testPosition);
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    public ArrayList<Position> getOpponentLegalMoves(Board board) {
+        int opponentColor = (this.getColor() == Constants.BLACK) ? Constants.WHITE : Constants.BLACK;
+        ArrayList list = new ArrayList<>();
+        for (int row = 0; row < Constants.SIZE; row++) {
+            for (int col = 0; col < Constants.SIZE; col++) {
+                Position testPosition = new Position(row, col);
+                if (board.getSquare(testPosition).getStatus() == Constants.EMPTY) {
+
+                    if (board.isLegalMove(this, testPosition)) {
+                        list.add(testPosition);
+                    }
+                }        
+            }
+        }
+        return list;
     }
 
     /**
