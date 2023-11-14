@@ -1,0 +1,26 @@
+#BlueJ class context
+comment0.target=testingVernon
+comment0.text=\r\n\ Your\ extended\ player\ class\r\n
+comment1.params=color
+comment1.target=testingVernon(int)
+comment1.text=\r\n\ Constructor\r\n\ @param\ color\ Player\ color\:\ one\ of\ Constants.\ BLACK\ or\ Constants.\ WHITE\r\n
+comment10.params=board\ position\ direction\ count
+comment10.target=boolean\ step(Board,\ Position,\ Position,\ int)
+comment2.params=board
+comment2.target=Position\ getNextMove(Board)
+comment2.text=\r\n\ Determines\ the\ player's\ next\ move\r\n\ @param\ board\ The\ current\ state\ of\ the\ game\ board\r\n\ @return\ The\ player's\ next\ move\r\n
+comment3.params=board
+comment3.target=Position\ getBestMove(Board)
+comment4.params=board\ position\ depth\ alpha\ beta\ maximizingPlayer
+comment4.target=int\ minimax(Board,\ Position,\ int,\ int,\ int,\ boolean)
+comment5.params=board\ move
+comment5.target=int\ assessMove(Board,\ Position)
+comment6.params=board\ move
+comment6.target=int\ calculateBoardControl(Board,\ Position)
+comment7.params=board\ move
+comment7.target=int\ countFlippedDiscs(Board,\ Position)
+comment8.params=board
+comment8.target=java.util.ArrayList\ getLegalMoves(Board)
+comment9.params=board\ positionToCheck
+comment9.target=boolean\ isLegalMove(Board,\ Position)
+numComments=11
